@@ -1,0 +1,38 @@
+/* sensor umidade do solo */
+
+#define umidadeAnalogica A0 
+#define umidadeDigital 7 
+#define LedVermelho 5 
+#define LedVerde 6 
+
+int valorumidade; //variável que armazenará o valor da umidade lida
+int valorumidadeDigital; //variável que armazenara a saída digital do sensor de umidade do solo
+
+void setup() {
+  Serial.begin(9600); 
+  pinMode(umidadeAnalogica, INPUT); 
+  pinMode(umidadeDigital, INPUT); 
+  pinMode(LedVermelho, OUTPUT); 
+  pinMode(LedVerde, OUTPUT); 
+}
+
+void loop() {
+  valorumidade = analogRead(umidadeAnalogica); //Realiza a leitura do sensor e armazena em valorumidade
+  valorumidade = map(valorumidade, 1023, 315, 0, 100); //Transforma os valores em uma escala de 0 a 100
+  Serial.print("Umidade encontrada: ");
+  Serial.print(valorumidade); //Imprime no monitor o valor de umidade em porcentagem
+  Serial.println(" % " );
+
+  valorumidadeDigital = digitalRead(umidadeDigital); //Realiza a leitura digital do sensor e armazena
+  if (valorumidadeDigital == 0) { //se esse valor for igual a 0, o led verde se acende
+    Serial.println("Status: Solo úmido");
+    digitalWrite(LedVermelho, LOW);
+    digitalWrite(LedVerde, HIGH);
+  }
+  else { // se esse valor for igual a 1, o led vermelho se acende
+    Serial.println("Status: Solo seco");
+    digitalWrite(LedVermelho, HIGH);
+    digitalWrite(LedVerde, LOW);
+  }
+  delay(500);
+}
